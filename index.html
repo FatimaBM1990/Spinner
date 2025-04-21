@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Styled Writing Spinner</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f0f8ff;
+      padding-top: 50px;
+    }
+
+    .wheel-container {
+      position: relative;
+      margin: 0 auto;
+      width: 300px;
+      height: 300px;
+    }
+
+    .wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 10px solid #333;
+      position: relative;
+      overflow: hidden;
+      transform: rotate(0deg);
+      transition: transform 3s ease-out;
+    }
+
+    .wheel div {
+      position: absolute;
+      width: 50%;
+      height: 50%;
+      top: 50%;
+      left: 50%;
+      transform-origin: 0% 0%;
+      background-color: #ffcccb;
+      border: 1px solid #999;
+      padding: 10px;
+      box-sizing: border-box;
+      color: #222;
+      font-weight: bold;
+    }
+
+    .wheel div:nth-child(2n) {
+      background-color: #add8e6;
+    }
+
+    .pointer {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 20px solid red;
+      z-index: 10;
+    }
+
+    button {
+      margin-top: 30px;
+      font-size: 1.5em;
+      padding: 10px 30px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎯 Writing Spinner</h1>
+  <div class="wheel-container">
+    <canvas id="confetti"></canvas>
+    <div class="pointer"></div>
+    <div id="wheel" class="wheel">
+      <div style="transform: rotate(0deg) translate(-100%, -100%)">1. Short dramatic sentence</div>
+      <div style="transform: rotate(60deg) translate(-100%, -100%)">2. Simile</div>
+      <div style="transform: rotate(120deg) translate(-100%, -100%)">3. Onomatopoeia</div>
+      <div style="transform: rotate(180deg) translate(-100%, -100%)">4. Personification</div>
+      <div style="transform: rotate(240deg) translate(-100%, -100%)">5. One-line dialogue</div>
+      <div style="transform: rotate(300deg) translate(-100%, -100%)">6. Question to the reader</div>
+    </div>
+  </div>
+
+  <button onclick="spinWheel()">Spin</button>
+
+  <audio id="spinSound" src="https://www.soundjay.com/button/sounds/button-16.mp3" preload="auto"></audio>
+  <audio id="dingSound" src="https://www.soundjay.com/button/sounds/button-4.mp3" preload="auto"></audio>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script>
+    let angle = 0;
+
+    function spinWheel() {
+      const wheel = document.getElementById("wheel");
+      const spinSound = document.getElementById("spinSound");
+      const dingSound = document.getElementById("dingSound");
+      spinSound.play();
+
+      const randomSpin = Math.floor(Math.random() * 6);
+      const segmentAngle = 360 / 6;
+      const extraSpins = 5 * 360;
+      const targetAngle = extraSpins + (randomSpin * segmentAngle) + (segmentAngle / 2);
+      angle += targetAngle;
+      wheel.style.transform = `rotate(${angle}deg)`;
+
+      setTimeout(() => {
+        dingSound.play();
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      }, 3100);
+    }
+  </script>
+
+</body>
+</html>
